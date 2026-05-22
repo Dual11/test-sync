@@ -1,10 +1,11 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from db import DB
 from datetime import datetime
+import os   # ← Añade esto
 
-app = FastAPI(title="RFID Sync Test - Cloud")
+app = FastAPI(title="RFID Cloud View")
 db = DB()
 templates = Jinja2Templates(directory="templates")
 
@@ -25,4 +26,5 @@ async def home(request: Request):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))   # ← Cambia esto
+    uvicorn.run(app, host="0.0.0.0", port=port)
