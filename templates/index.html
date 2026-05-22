@@ -3,10 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>RFID - Cloud View</title>
+        <title>RFID Cloud - Usuarios</title>
         <style>
             body {
-                font-family: 'Segoe UI', Arial, sans-serif;
+                font-family: Arial, sans-serif;
                 background: #0f172a;
                 color: #e2e8f0;
                 margin: 0;
@@ -14,7 +14,7 @@
             }
             .container {
                 max-width: 1200px;
-                margin: 0 auto;
+                margin: auto;
             }
             h1 {
                 color: #60a5fa;
@@ -24,7 +24,7 @@
                 width: 100%;
                 border-collapse: collapse;
                 background: #1e2937;
-                border-radius: 8px;
+                border-radius: 10px;
                 overflow: hidden;
             }
             th,
@@ -39,50 +39,42 @@
             tr:hover {
                 background: #334155;
             }
-            .header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 20px;
+            .empty {
+                text-align: center;
+                padding: 60px;
+                color: #94a3b8;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="header">
-                <h1>📊 RFID - Vista en la Nube (Dokploy)</h1>
-                <p><strong>Última actualización:</strong> {{ now }}</p>
-            </div>
+            <h1>📊 RFID - Usuarios en la Nube</h1>
+            <p style="text-align: center">Última actualización: {{ now }} | Total: {{ total }}</p>
 
-            <p><strong>Total de usuarios:</strong> {{ total }}</p>
-
+            {% if usuarios %}
             <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Edad</th>
-                        <th>Fecha de Creación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for u in usuarios %}
-                    <tr>
-                        <td>{{ u.id }}</td>
-                        <td>{{ u.nombre }}</td>
-                        <td>{{ u.email or '-' }}</td>
-                        <td>{{ u.edad or '-' }}</td>
-                        <td>{{ u.creado_en.strftime('%d/%m/%Y %H:%M') }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
+                <tr>
+                    <th>UID Tarjeta</th>
+                    <th>Nombre</th>
+                    <th>Fecha Registro</th>
+                    <th>Último Evento</th>
+                    <th>Notas</th>
+                </tr>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.uid_limpio }}</td>
+                    <td>{{ u.nombre }}</td>
+                    <td>{{ u.fecha_registro.strftime('%d/%m/%Y %H:%M') if u.fecha_registro else '-' }}</td>
+                    <td>{{ u.ultimo_evento or '-' }}</td>
+                    <td>{{ u.notas or '-' }}</td>
+                </tr>
+                {% endfor %}
             </table>
-
-            {% if not usuarios %}
-            <p style="text-align: center; color: #94a3b8; margin-top: 40px">
-                Aún no hay datos sincronizados desde el equipo local.
-            </p>
+            {% else %}
+            <div class="empty">
+                <h2>No hay usuarios registrados aún</h2>
+                <p>Cuando registres usuarios desde tu equipo local, aparecerán aquí automáticamente.</p>
+            </div>
             {% endif %}
         </div>
     </body>
