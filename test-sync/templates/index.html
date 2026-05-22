@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>RFID - Cloud View</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', Arial, sans-serif;
+                background: #0f172a;
+                color: #e2e8f0;
+                margin: 0;
+                padding: 20px;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+            h1 {
+                color: #60a5fa;
+                text-align: center;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: #1e2937;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            th,
+            td {
+                padding: 14px;
+                text-align: left;
+                border-bottom: 1px solid #334155;
+            }
+            th {
+                background: #1e40af;
+            }
+            tr:hover {
+                background: #334155;
+            }
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📊 RFID - Vista en la Nube (Dokploy)</h1>
+                <p><strong>Última actualización:</strong> {{ now }}</p>
+            </div>
+
+            <p><strong>Total de usuarios:</strong> {{ total }}</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Edad</th>
+                        <th>Fecha de Creación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in usuarios %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td>{{ u.nombre }}</td>
+                        <td>{{ u.email or '-' }}</td>
+                        <td>{{ u.edad or '-' }}</td>
+                        <td>{{ u.creado_en.strftime('%d/%m/%Y %H:%M') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if not usuarios %}
+            <p style="text-align: center; color: #94a3b8; margin-top: 40px">
+                Aún no hay datos sincronizados desde el equipo local.
+            </p>
+            {% endif %}
+        </div>
+    </body>
+</html>
