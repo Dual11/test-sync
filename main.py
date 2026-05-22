@@ -13,17 +13,18 @@ async def home(request: Request):
     try:
         db = DB()
         conn = db.connect()
-        cur = conn.cursor()
-        
+        cur = conn.cursor()   # Cursor normal (devuelve tuplas)
+
         cur.execute("""
             SELECT uid_limpio, nombre, fecha_registro, notas, ultimo_evento 
             FROM usuarios 
             ORDER BY fecha_registro DESC
         """)
+        
         rows = cur.fetchall()
         conn.close()
 
-        # Convertir a lista de dicts simple (importante para Jinja2)
+        # Convertir tuplas a diccionarios manualmente
         usuarios = []
         for row in rows:
             usuarios.append({
@@ -42,12 +43,13 @@ async def home(request: Request):
         })
 
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"ERROR: {type(e).__name__}: {e}")
         return HTMLResponse(f"""
-        <h1>❌ Error</h1>
-        <p>{str(e)}</p>
+        <h1>❌ Error de conexión / consulta</h1>
+        <p><strong>Tipo:</strong> {type(e).__name__}</p>
+        <p><strong>Mensaje:</strong> {str(e)}</p>
         <hr>
-        <p>Si ves este error, revisa los logs completos en Render.</p>
+        <p>Revisa que la variable DATABASE_URL sea la correcta y que la tabla 'usuarios' tenga datos.</p>
         """, status_code=500)
 
 if __name__ == "__main__":
