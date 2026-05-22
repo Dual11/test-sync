@@ -13,7 +13,7 @@ async def home(request: Request):
     try:
         db = DB()
         conn = db.connect()
-        cur = conn.cursor()   # Cursor normal (devuelve tuplas)
+        cur = conn.cursor()  # Cursor normal
 
         cur.execute("""
             SELECT uid_limpio, nombre, fecha_registro, notas, ultimo_evento 
@@ -24,7 +24,7 @@ async def home(request: Request):
         rows = cur.fetchall()
         conn.close()
 
-        # Convertir tuplas a diccionarios manualmente
+        # Conversión manual segura
         usuarios = []
         for row in rows:
             usuarios.append({
@@ -43,13 +43,14 @@ async def home(request: Request):
         })
 
     except Exception as e:
-        print(f"ERROR: {type(e).__name__}: {e}")
+        error_msg = str(e)
         return HTMLResponse(f"""
-        <h1>❌ Error de conexión / consulta</h1>
+        <h1>❌ Error</h1>
         <p><strong>Tipo:</strong> {type(e).__name__}</p>
-        <p><strong>Mensaje:</strong> {str(e)}</p>
+        <p><strong>Mensaje:</strong> {error_msg}</p>
         <hr>
-        <p>Revisa que la variable DATABASE_URL sea la correcta y que la tabla 'usuarios' tenga datos.</p>
+        <p>La conexión a la base de datos funciona, pero la tabla 'usuarios' está vacía o no existe aún.</p>
+        <p>Esto es normal si todavía no has sincronizado desde local.</p>
         """, status_code=500)
 
 if __name__ == "__main__":
